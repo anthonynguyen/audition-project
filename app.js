@@ -6,8 +6,8 @@ app.controller('MainCtrl', [
     $scope.test = 'Hello world!';
 
     $scope.messages = [
-      'message 1',
-      'message 2'
+      {name: 'message 1', message: 'hello'},
+      {name: 'message 2', message: 'bluwh'}
     ];
 
     $scope.getAll = function() {
