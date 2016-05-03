@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/anthonynguyen/audition-project/issues"
   },
-  "homepage": "https://github.com/anthonynguyen/audition-project#readme"
+  "homepage": "https://github.com/anthonynguyen/audition-project#readme",
+  "dependencies": {
+    "express": "^4.13.4"
+  }
 }
