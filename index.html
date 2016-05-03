@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Audition Project</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.3.10/angular.min.js"></script>
+    <script src="app.js"></script>
+  </head>
+
+  <body ng-app="auditionProject" ng-controller="MainCtrl">
+    <div ng-repeat="message in messages">
+      {{message.message}}
+    </div>
+    <!-- <button ng-click="getAll()">Show all messages</button> -->
+  </body>
+</html>
