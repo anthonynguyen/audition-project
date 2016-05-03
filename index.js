@@ -1,10 +1,14 @@
-var express = require('express');
+var assert = require("assert");
+var express = require("express");
+var mongo = require("mongodb");
+
 var app = express();
 
-var mongo = require("mongodb");
-var MongoClient = mongo.MongoClient;
-var assert = require("assert");
+var bodyParser = require("body-parser");
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
+var MongoClient = mongo.MongoClient;
 var db = null;
 
 var MONGO_URL = "mongodb://localhost:27017/audition";
@@ -32,6 +36,40 @@ app.get("/get/:id", function (req, res) {
 			res.send("No message with that id");
 		}
 	});
+});
+
+var getNextSequence = function(callback) {
+	var num;
+	var r = db.collection("counters").findAndModify(
+		{_id: "message_id"},
+		[],
+		{$inc: {seq: 1}},
+		function (err, r) {
+			if (r == null || r.value == null) {
+				// counters collection doesn't exist, so add default values
+				db.collection("counters").insert({_id: "message_id", seq: 1}, function(err, result) {
+					callback(0);
+				});
+			} else {
+				callback(r.value.seq);
+			}
+		}
+	);
+}
+
+app.post("/post", function(req, res) {
+	if (req.body.hasOwnProperty("message")) {
+		getNextSequence(function(next_id) {
+			db.collection(COLLECTION).insert(
+				{message: req.body.message, message_id: next_id},
+				function(err, result) {
+					res.send("Message inserted with id " + result.insertedIds[0] + " (" + next_id + ")");
+				}
+			);
+		});
+	} else {
+		res.send("You must send a POST request with a 'message' key");
+	}
 });
 
 app.listen(3000, function () {
