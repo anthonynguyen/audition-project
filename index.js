@@ -4,6 +4,12 @@ var app = express();
 var mongo = require("mongodb");
 var MongoClient = mongo.MongoClient;
 var assert = require("assert");
+var express = require('express');
+var app = express();
+
+var mongo = require("mongodb");
+var MongoClient = mongo.MongoClient;
+var assert = require("assert");
 
 var db = null;
 
@@ -19,6 +25,16 @@ app.get('/', function(req, res) {
   res.send('Hello World!');
 });
 
+app.get("/get/messages", function(req, res){	
+	db.collection(COLLECTION).find().toArray(function(err, messages){
+		if (err){
+        res.send(err);
+		} else
+		{
+        res.json(messages);
+		}
+	});
+});
 
 app.get("/get/:id", function (req, res) {
 	// Cannot search _id with a string, you have to convert it to an ObjectId
@@ -33,6 +49,11 @@ app.get("/get/:id", function (req, res) {
 			res.send("No message with that id");
 		}
 	});
+});
+
+
+app.listen(3000, function () {
+  console.log('Example app listening on port 3000!');
 });
 
 
