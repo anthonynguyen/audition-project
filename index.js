@@ -23,17 +23,36 @@ app.get('/', function(req, res) {
   res.send('Hello World!');
 });
 
-app.get("/get/:id", function (req, res) {
+app.get("/get/:id", function (req, res, next) {
 	// Cannot search _id with a string, you have to convert it to an ObjectId
-	var id = mongo.ObjectId(req.params.id);
+	try {
+		var id = mongo.ObjectId(req.params.id);
+	} catch (e) {
+		next();
+		return;
+	}
 
 	db.collection(COLLECTION).findOne({_id: id}, function(err, doc) {
 		assert.equal(null, err);
 
 		if (doc != null) {
-			res.send(doc.message);
+			res.json(doc);
 		} else {
-			res.send("No message with that id");
+			res.json({error: "No message with that object id"});
+		}
+	});
+});
+
+app.get("/get/:message_id", function (req, res) {
+	var id = parseInt(req.params.message_id);
+
+	db.collection(COLLECTION).findOne({message_id: id}, function(err, doc) {
+		assert.equal(null, err);
+
+		if (doc != null) {
+			res.json(doc);
+		} else {
+			res.json({error: "No message with that id"});
 		}
 	});
 });
@@ -63,12 +82,12 @@ app.post("/post", function(req, res) {
 			db.collection(COLLECTION).insert(
 				{message: req.body.message, message_id: next_id},
 				function(err, result) {
-					res.send("Message inserted with id " + result.insertedIds[0] + " (" + next_id + ")");
+					res.json({_id: result.insertedIds[0], message_id: next_id, message: req.body.message});
 				}
 			);
 		});
 	} else {
-		res.send("You must send a POST request with a 'message' key");
+		res.json({error: "You must send a POST request with a 'message' key"});
 	}
 });
 
