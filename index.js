@@ -90,11 +90,14 @@ var getNextSequence = function(callback) {
 app.post("/api/messages", function(req, res) {
 	if (req.body.hasOwnProperty("message")) {
 		var palinDrome = isPalindrome(req.body.message);
+		var d = new Date();
+		var currentTime = d.toDateString();
 		getNextSequence(function(next_id) {
 			db.collection(COLLECTION).insert(
-				{message: req.body.message, message_id: next_id, is_palindrome: palinDrome},
+				{message: req.body.message, message_id: next_id, is_palindrome: palinDrome, date: currentTime},
 				function(err, result) {
-					res.json({_id: result.insertedIds[0], message_id: next_id, message: req.body.message, is_palindrome: palinDrome});
+					res.json({_id: result.insertedIds[0], message_id: next_id, message: req.body.message,
+						is_palindrome: palinDrome, date: currentTime});
 				}
 			);
 		});
