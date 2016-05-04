@@ -23,18 +23,18 @@ app.get('/', function(req, res) {
   res.send('Hello World!');
 });
 
-app.get("/get/messages", function(req, res){
+app.get("/api/messages", function(req, res){
 	db.collection(COLLECTION).find().toArray(function(err, messages){
 		if (err){
-        		res.send(err);
+  		res.send(err);
 		} else
 		{
-        		res.json(messages);
+  		res.json(messages);
 		}
 	});
 });
 
-app.get("/get/:id", function (req, res, next) {
+app.get("/api/messages/:id", function (req, res, next) {
 	// Cannot search _id with a string, you have to convert it to an ObjectId
 	try {
 		var id = mongo.ObjectId(req.params.id);
@@ -46,7 +46,7 @@ app.get("/get/:id", function (req, res, next) {
 	db.collection(COLLECTION).findOne({_id: id}, function(err, doc) {
 		assert.equal(null, err);
 
-		if (doc != null) {
+		if (doc !== null) {
 			res.json(doc);
 		} else {
 			res.json({error: "No message with that object id"});
@@ -54,13 +54,13 @@ app.get("/get/:id", function (req, res, next) {
 	});
 });
 
-app.get("/get/:message_id", function (req, res) {
+app.get("/api/messages/:message_id", function (req, res) {
 	var id = parseInt(req.params.message_id);
 
 	db.collection(COLLECTION).findOne({message_id: id}, function(err, doc) {
 		assert.equal(null, err);
 
-		if (doc != null) {
+		if (doc !== null) {
 			res.json(doc);
 		} else {
 			res.json({error: "No message with that id"});
@@ -75,7 +75,7 @@ var getNextSequence = function(callback) {
 		[],
 		{$inc: {seq: 1}},
 		function (err, r) {
-			if (r == null || r.value == null) {
+			if (r === null || r.value === null) {
 				// counters collection doesn't exist, so add default values
 				db.collection("counters").insert({_id: "message_id", seq: 1}, function(err, result) {
 					callback(0);
@@ -85,9 +85,9 @@ var getNextSequence = function(callback) {
 			}
 		}
 	);
-}
+};
 
-app.post("/post", function(req, res) {
+app.post("/api/messages", function(req, res) {
 	if (req.body.hasOwnProperty("message")) {
 		var palinDrome = isPalindrome(req.body.message);
 		getNextSequence(function(next_id) {
@@ -101,6 +101,18 @@ app.post("/post", function(req, res) {
 	} else {
 		res.json({error: "You must send a POST request with a 'message' key"});
 	}
+});
+
+app.delete("/api/messages/:id", function(req, res) {
+	var id = mongo.ObjectId(req.params.id);
+	db.collection(COLLECTION).deleteOne({_id: id}, function(err, result) {
+		if (err) {
+			res.json({error: "No message with that object id"});
+			console.log(err);
+		} else {
+			res.json(result);
+		}
+	});
 });
 
 app.listen(3000, function () {
