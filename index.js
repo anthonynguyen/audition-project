@@ -90,11 +90,14 @@ var getNextSequence = function(callback) {
 app.post("/post", function(req, res) {
 	if (req.body.hasOwnProperty("message")) {
 		var palinDrome = isPalindrome(req.body.message);
+		var d = new Date();
+		var currentTime = d.toDateString();
 		getNextSequence(function(next_id) {
 			db.collection(COLLECTION).insert(
-				{message: req.body.message, message_id: next_id, is_palindrome: palinDrome},
+				{message: req.body.message, message_id: next_id, is_palindrome: palinDrome, date: currentTime},
 				function(err, result) {
-					res.json({_id: result.insertedIds[0], message_id: next_id, message: req.body.message, is_palindrome: palinDrome});
+					res.json({_id: result.insertedIds[0], message_id: next_id, message: req.body.message,
+						is_palindrome: palinDrome, date: currentTime});
 				}
 			);
 		});
@@ -103,8 +106,8 @@ app.post("/post", function(req, res) {
 	}
 });
 
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
+app.listen(3001, function () {
+  console.log('Example app listening on port 3001!');
 });
 
 // Verifies whether a given message is a palindrome or not
