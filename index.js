@@ -23,7 +23,7 @@ app.get('/', function(req, res) {
   res.send('Hello World!');
 });
 
-app.get("/get/messages", function(req, res){	
+app.get("/get/messages", function(req, res){
 	db.collection(COLLECTION).find().toArray(function(err, messages){
 		if (err){
         		res.send(err);
@@ -89,11 +89,12 @@ var getNextSequence = function(callback) {
 
 app.post("/post", function(req, res) {
 	if (req.body.hasOwnProperty("message")) {
+		var palinDrome = isPalindrome(req.body.message);
 		getNextSequence(function(next_id) {
 			db.collection(COLLECTION).insert(
-				{message: req.body.message, message_id: next_id},
+				{message: req.body.message, message_id: next_id, is_palindrome: palinDrome},
 				function(err, result) {
-					res.json({_id: result.insertedIds[0], message_id: next_id, message: req.body.message});
+					res.json({_id: result.insertedIds[0], message_id: next_id, message: req.body.message, is_palindrome: palinDrome});
 				}
 			);
 		});
