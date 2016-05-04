@@ -23,6 +23,17 @@ app.get('/', function(req, res) {
   res.send('Hello World!');
 });
 
+app.get("/get/messages", function(req, res){	
+	db.collection(COLLECTION).find().toArray(function(err, messages){
+		if (err){
+        		res.send(err);
+		} else
+		{
+        		res.json(messages);
+		}
+	});
+});
+
 app.get("/get/:id", function (req, res, next) {
 	// Cannot search _id with a string, you have to convert it to an ObjectId
 	try {
