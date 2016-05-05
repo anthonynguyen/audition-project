@@ -1,0 +1,61 @@
+<html ng-app="app">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+<title>asdf</title>
+<style>
+.pure-g {
+	justify-content: center;
+}
+
+#main {
+	background: #eee;
+	padding-top: 2em;
+}
+</style>
+</head>
+<body>
+<div class="pure-g" id="wrap">
+	<div id="main" class="pure-u-1-2" ng-controller="MainController">
+		<form class="pure-form pure-form-aligned pure-g">
+			<input id="message" type="text" placeholder="Your message here" class="pure-u-3-5" ng-model="inputMessage">
+			<button type="submit" class="pure-button pure-button-primary" ng-disabled="inputMessage == null" ng-click="sendMessage()"><span class="fa fa-check"></span> Send</button>
+		</form>
+		<ul>
+			<li ng-repeat="message in messages">{{ message.date }} - {{ message.message }}</li>
+		</ul>
+	</div>
+</div>
+<script type="text/javascript">
+	var app = angular.module("app", []);
+
+	app.controller("MainController", ["$scope", "$http", function($scope, $http) {
+		$scope.getMessages = function() {
+			$http.get("/api/messages").then(
+				function successCallback(response) {
+					$scope.messages = response.data.reverse();
+				}, function errorCallback(response) {
+					console.log(response);
+				}
+			);
+		};
+
+		$scope.sendMessage = function() {
+			var msg = $scope.inputMessage;
+			$http.post("/api/messages", {message: msg}).then(
+				function successCallback(response) {
+					$scope.getMessages();
+					$scope.inputMessage = "";
+				}, function errorCallback(response) {
+					console.log(response);
+				}
+			);
+		};
+
+		$scope.getMessages();
+	}]);
+</script>
+</body>
+</html>
