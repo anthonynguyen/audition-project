@@ -19,25 +19,25 @@ MongoClient.connect(MONGO_URL, function(err, _db) {
 	db = _db;
 });
 
-app.get('/', function(req, res) {
-  res.send('Hello World!');
+app.get("/", function(req, res) {
+  res.send("Hello World!");
 });
 
 app.get("/api/messages", function(req, res){
 	db.collection(COLLECTION).find().toArray(function(err, messages){
-		if (err){
-  		res.send(err);
-		} else
-		{
-  		res.json(messages);
+		if (err) {
+			res.send(err);
+		} else {
+			res.json(messages);
 		}
 	});
 });
 
 app.get("/api/messages/:id", function (req, res, next) {
 	// Cannot search _id with a string, you have to convert it to an ObjectId
+	var id;
 	try {
-		var id = mongo.ObjectId(req.params.id);
+		id = mongo.ObjectId(req.params.id);
 	} catch (e) {
 		next();
 		return;
@@ -49,6 +49,7 @@ app.get("/api/messages/:id", function (req, res, next) {
 		if (doc !== null) {
 			res.json(doc);
 		} else {
+			res.status(404);
 			res.json({error: "No message with that object id"});
 		}
 	});
@@ -63,14 +64,14 @@ app.get("/api/messages/:message_id", function (req, res) {
 		if (doc !== null) {
 			res.json(doc);
 		} else {
+			res.status(404);
 			res.json({error: "No message with that id"});
 		}
 	});
 });
 
 var getNextSequence = function(callback) {
-	var num;
-	var r = db.collection("counters").findAndModify(
+	db.collection("counters").findAndModify(
 		{_id: "message_id"},
 		[],
 		{$inc: {seq: 1}},
@@ -102,6 +103,7 @@ app.post("/api/messages", function(req, res) {
 			);
 		});
 	} else {
+		res.status(400);
 		res.json({error: "You must send a POST request with a 'message' key"});
 	}
 });
@@ -119,16 +121,16 @@ app.delete("/api/messages/:id", function(req, res) {
 });
 
 app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
+  console.log("Audition project listening on port 3000!");
 });
 
 // Verifies whether a given message is a palindrome or not
 function isPalindrome(message) {
-    var len = message.length;
-    for ( var i = 0; i < Math.floor(len/2); i++) {
-        if (message[i] !== message[len - 1 - i]) {
-            return false;
-        }
-    }
-    return true;
+	var len = message.length;
+	for ( var i = 0; i < Math.floor(len/2); i++) {
+		if (message[i] !== message[len - 1 - i]) {
+			return false;
+		}
+	}
+	return true;
 }
