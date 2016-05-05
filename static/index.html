@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
-<title>asdf</title>
+<title>Audition Project</title>
 <style>
 .pure-g {
 	justify-content: center;
@@ -14,8 +14,17 @@
 	padding-top: 2em;
 }
 
+table {
+	margin: 0 auto;
+}
+
+td {
+	word-wrap: break-word;
+	word-break: break-all;
+}
+
 .message-date, .fa-trash {
-	color: #ccc;
+	color: #aaa;
 }
 
 .message-palindrome, .message-messageid {
@@ -32,16 +41,16 @@
 	<div id="main" class="pure-u-1-2 pure-g" ng-controller="MainController" ng-init="getMessages()">
 		<form class="pure-form pure-form-aligned pure-g">
 			<input id="message" type="text" placeholder="Your message here" class="pure-u-3-5" ng-model="inputMessage">
-			<button type="submit" class="pure-button pure-button-primary" ng-disabled="inputMessage == null" ng-click="sendMessage()"><span class="fa fa-check"></span> Send</button>
+			<button type="submit" class="pure-button pure-button-primary" ng-disabled="inputMessage == null || inputMessage == ''" ng-click="sendMessage()"><span class="fa fa-check"></span> Send</button>
 		</form>
-		<table class="pure-table pure-u-1-1 pure-table-striped">
+		<table class="pure-table pure-table-horizontal pure-table-striped">
 			<thead>
 				<tr>
-					<td>#</td>
-					<td>Sent</td>
-					<td>Palindrome?</td>
-					<td>Message</td>
-					<td><span class="fa fa-refresh" ng-click="getMessages()"></span></td>
+					<td nowrap>#</td>
+					<td nowrap>Sent</td>
+					<td nowrap>Palindrome?</td>
+					<td nowrap>Message</td>
+					<td nowrap><span class="fa fa-refresh" ng-click="getMessages()"></span></td>
 				</tr>
 			</thead>
 			<tbody>
