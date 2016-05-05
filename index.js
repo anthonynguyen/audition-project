@@ -92,7 +92,7 @@ app.post("/api/messages", function(req, res) {
 	if (req.body.hasOwnProperty("message")) {
 		var palinDrome = isPalindrome(req.body.message);
 		var d = new Date();
-		var currentTime = d.toDateString();
+		var currentTime = d.toUTCString();
 		getNextSequence(function(next_id) {
 			db.collection(COLLECTION).insert(
 				{message: req.body.message, message_id: next_id, is_palindrome: palinDrome, date: currentTime},
