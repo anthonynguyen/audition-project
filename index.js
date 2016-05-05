@@ -4,6 +4,12 @@ var mongo = require("mongodb");
 
 var app = express();
 
+var server = app.listen(3000, function () {
+  console.log("Audition project listening on port 3000!");
+});
+
+var io = require("socket.io")(server);
+
 var bodyParser = require("body-parser");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
@@ -101,6 +107,7 @@ app.post("/api/messages", function(req, res) {
 				function(err, result) {
 					res.json({_id: result.insertedIds[0], message_id: next_id, message: req.body.message,
 						is_palindrome: palinDrome, date: currentTime});
+					io.emit("update");
 				}
 			);
 		});
@@ -121,10 +128,6 @@ app.delete("/api/messages/:id", function(req, res) {
 			res.json({error: "No message with that object id"});
 		}
 	});
-});
-
-app.listen(3000, function () {
-  console.log("Audition project listening on port 3000!");
 });
 
 // Verifies whether a given message is a palindrome or not
