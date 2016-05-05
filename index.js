@@ -111,11 +111,12 @@ app.post("/api/messages", function(req, res) {
 app.delete("/api/messages/:id", function(req, res) {
 	var id = mongo.ObjectId(req.params.id);
 	db.collection(COLLECTION).deleteOne({_id: id}, function(err, result) {
-		if (err) {
-			res.json({error: "No message with that object id"});
-			console.log(err);
+		if (result.result.n === 1) {
+			res.json({success: "Message deleted"});
+			// console.log(result.result.n);
 		} else {
-			res.json(result);
+			res.status(404);
+			res.json({error: "No message with that object id"});
 		}
 	});
 });
