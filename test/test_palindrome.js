@@ -2,7 +2,7 @@
 
 var should = require('should');
 
-var isPalindrome = require('../palindrome');
+var isPalindrome = require('../module/palindrome');
 
 describe('palindromeTest', function() {
 
