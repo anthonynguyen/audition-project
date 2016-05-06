@@ -41,10 +41,15 @@ Then follow the instructions for running the app locally, to have it running on 
 
 
 ## REST API Documentation
+
 GET         /api/messages                   Get a list of messages
+
 GET         /api/messages/:id               Get a specific message
+
 GET         /api/messages/:message_id       Get a specific message
+
 POST        /api/messages                   Post a message
+
 DELETE      /api/messages/:id               Delete a specific message
 
 
