@@ -16,14 +16,19 @@ Clone the git repository in the local system.
 Enter the directory and install all the node dependencies.
 
 '''bash
+
 npm install
+
 '''
 
 Since the Audition Project is a node app that runs as an express server, index.js must be run to start it.
 
 ''' bash
+
 node index.js
+
 '''
+
 The app will run at http://localhost:3000
 
 
@@ -34,7 +39,7 @@ Fire up an instance on your EC2 account in AWS
 In terminal, ssh to your instance's home folder.
 
 ''' bash
-ssh -i <instance-name>.pem ubuntu@<instance-ip-address>
+ssh -i instance-name.pem ubuntu@instance-ip-address
 '''
 
 Then follow the instructions for running the app locally, to have it running on the EC2 instance server.
