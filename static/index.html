@@ -1,0 +1,133 @@
+<html ng-app="app">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"><!-- load bootstrap -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js"></script>
+<title>Audition Project</title>
+<style>
+.pure-g {
+	justify-content: center;
+}
+
+#main {
+	padding-top: 2em;
+}
+
+table {
+	margin: 0 auto;
+}
+
+td {
+	word-wrap: break-word;
+	word-break: break-all;
+}
+
+.message-date, .fa-trash {
+	color: #aaa;
+}
+
+.message-palindrome, .message-messageid {
+	text-align: center;
+}
+
+.fa-trash:hover, .fa-refresh:hover {
+	cursor: pointer;
+}
+</style>
+</head>
+<body>
+	<div class="jumbotron text-center">
+		<h1>Welcome to the Audition Project</h1>
+	</div>
+<div class="pure-g" id="wrap">
+	<div id="main" class="pure-u-1-2 pure-g" ng-controller="MainController" ng-init="getMessages()">
+		<form class="pure-form pure-form-aligned pure-g">
+			<input id="message" type="text" placeholder="Your message here" class="pure-u-3-5" ng-model="inputMessage">
+			<button type="submit" class="pure-button pure-button-primary" ng-disabled="inputMessage == null || inputMessage == ''" ng-click="sendMessage()"><span class="fa fa-check"></span> Send</button>
+		</form>
+		<table class="pure-table pure-table-horizontal pure-table-striped">
+			<thead>
+				<tr>
+					<td nowrap>#</td>
+					<td nowrap>Sent</td>
+					<td nowrap>Palindrome?</td>
+					<td nowrap>Message</td>
+					<td nowrap><span class="fa fa-refresh" ng-click="getMessages()"></span></td>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="message in messages">
+					<td class="message-messageid" nowrap>{{ message.message_id }}</td>
+					<td class="message-date" nowrap>{{ relTime(message.date) + " ago" }}</td>
+					<td class="message-palindrome"><span class="fa {{ checkMark(message.is_palindrome) }}"></span></td>
+					<td class="message-message">{{ message.message }}</td>
+					<td><span class="fa fa-trash" ng-click="deleteMessage(message._id)"></span></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+<script type="text/javascript">
+	var app = angular.module("app", []);
+
+	app.controller("MainController", ["$scope", "$http", function($scope, $http) {
+		$scope.relTime = function(sdate) {
+			var date = new Date(sdate);
+			var seconds = ($scope.now.getTime() - date.getTime()) / 1000;
+			if (seconds < 60) {
+				return parseInt(seconds) + "s";
+			} else if (seconds < 60 * 60) {
+				return parseInt(seconds / 60) + "m";
+			} else if (seconds < 60 * 60 * 24) {
+				return parseInt(seconds / 60 / 60) + "h";
+			} else {
+				return parseInt(seconds / 60 / 60 / 24) + "d";
+			}
+		}
+		$scope.getMessages = function() {
+			$http.get("/api/messages").then(
+				function successCallback(response) {
+					$scope.messages = response.data.reverse();
+					$scope.now = new Date();
+				}, function errorCallback(response) {
+					console.log(response);
+				}
+			);
+		};
+
+		$scope.sendMessage = function() {
+			var msg = $scope.inputMessage;
+			$http.post("/api/messages", {message: msg}).then(
+				function successCallback(response) {
+					$scope.getMessages();
+					$scope.inputMessage = "";
+				}, function errorCallback(response) {
+					console.log(response);
+				}
+			);
+		};
+
+		$scope.deleteMessage = function(id) {
+			console.log(id);
+			$http.delete("/api/messages/" + id).then(
+				function successCallback(response) {
+					$scope.getMessages();
+				}, function errorCallback(response) {
+					console.log(response);
+				}
+			);
+		};
+
+		$scope.checkMark = function(b) {
+			if (b) {
+				return "fa-check";
+			}
+
+			return "";
+		}
+	}]);
+</script>
+</body>
+</html>
