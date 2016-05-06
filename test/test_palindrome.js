@@ -5,8 +5,13 @@ var should = require('should');
 var isPalindrome = require('../palindrome');
 
 describe('palindromeTest', function() {
-  
-  // not sure we need to test null string
+
+  // may not need
+  it('null string', function(done) {
+    var result = isPalindrome(null);
+    result.should.be.false();
+    done();
+  });
 
   it('empty string as a palindrome', function(done) {
     var result = isPalindrome('');
@@ -16,7 +21,7 @@ describe('palindromeTest', function() {
 
   it('should not be case sensitive', function(done) {
     var result = isPalindrome('Level');
-    result.should.be.false();
+    result.should.be.true();
     done();
   });
 
@@ -40,7 +45,7 @@ describe('palindromeTest', function() {
 
   it('white space1', function(done) {
     var result = isPalindrome('a levela');
-    result.should.be.false();
+    result.should.be.true();
     done();
   });
 
