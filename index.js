@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 var MongoClient = mongo.MongoClient;
 var db = null;
 
-var isPalindrome = require('./palindrome');
+var isPalindrome = require('./module/palindrome');
 
 var MONGO_URL = "mongodb://localhost:27017/audition";
 var COLLECTION = "messages";
