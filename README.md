@@ -58,7 +58,3 @@ POST             /api/messages                        Post a message
 DELETE           /api/messages/:id                    Delete a specific message
 
 
-## URI to the app
-
-A running version of the app can be found here: ec2-52-201-255-191.compute-1.amazonaws.com
-
