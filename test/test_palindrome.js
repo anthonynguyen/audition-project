@@ -1,13 +1,16 @@
-var should = require(should);
+'use strict';
 
-var isPalindrome = require('../index');
+var should = require('should');
 
-descibe('isPalindrome', function() {
-  // there should be a test for null string
+var isPalindrome = require('../palindrome');
+
+describe('palindromeTest', function() {
+  
+  // not sure we need to test null string
 
   it('empty string as a palindrome', function(done) {
     var result = isPalindrome('');
-    result.shoule.be.true();
+    result.should.be.true();
     done();
   });
 
@@ -23,6 +26,12 @@ descibe('isPalindrome', function() {
     done();
   });
 
+  it('basic false', function(done) {
+    var result = isPalindrome('abdf');
+    result.should.be.false();
+    done();
+  });
+
   it('white space', function(done) {
     var result = isPalindrome('a level a');
     result.should.be.true();
@@ -33,5 +42,23 @@ descibe('isPalindrome', function() {
     var result = isPalindrome('a levela');
     result.should.be.false();
     done();
-  })
+  });
+
+  it('white space2', function(done) {
+    var result = isPalindrome(' ');
+    result.should.be.true();
+    done();
+  });
+
+  it('handle number', function(done) {
+    var result = isPalindrome('123321');
+    result.should.be.true();
+    done();
+  });
+
+  it('single character', function(done) {
+    var result = isPalindrome('a');
+    result.should.be.true();
+    done();
+  });
 });
