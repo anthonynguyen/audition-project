@@ -11,6 +11,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 var MongoClient = mongo.MongoClient;
 var db = null;
 
+var isPalindrome = require('./module/palindrome');
+
 var MONGO_URL = "mongodb://localhost:27017/audition";
 var COLLECTION = "messages";
 MongoClient.connect(MONGO_URL, function(err, _db) {
@@ -126,15 +128,3 @@ app.delete("/api/messages/:id", function(req, res) {
 app.listen(3000, function () {
   console.log("Audition project listening on port 3000!");
 });
-
-// Verifies whether a given message is a palindrome or not
-function isPalindrome(message) {
-	message = message.replace(/[^\w\s]|_/g, "").replace(/\s+/g, "").toLowerCase();
-	var len = message.length;
-	for ( var i = 0; i < Math.floor(len/2); i++) {
-		if (message[i] !== message[len - 1 - i]) {
-			return false;
-		}
-	}
-	return true;
-}
