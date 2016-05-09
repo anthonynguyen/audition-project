@@ -1,6 +1,7 @@
 var assert = require("assert");
 var express = require("express");
 var mongo = require("mongodb");
+var url = require("url");
 
 var app = express();
 
@@ -13,7 +14,18 @@ var db = null;
 
 var isPalindrome = require('./module/palindrome');
 
-var MONGO_URL = "mongodb://localhost:27017/audition";
+var MONGO_HOST = "localhost";
+var MONGO_PORT = "27017";
+var MONGO_DATABASE = "audition";
+
+if (process.env.MONGODB_PORT != null) {
+	var addr = url.parse(process.env.MONGODB_PORT); // e.g. tcp://172.17.0.5:5432
+	MONGO_HOST = addr.hostname;
+	MONGO_PORT = addr.port;
+}
+
+var MONGO_URL = "mongodb://" + MONGO_HOST + ":" + MONGO_PORT + "/" + MONGO_DATABASE;
+
 var COLLECTION = "messages";
 MongoClient.connect(MONGO_URL, function(err, _db) {
 	assert.equal(null, err);

@@ -1,0 +1,10 @@
+mongodb:
+  image: mongo
+  expose:
+    - "27017"
+app:
+  build: .
+  links:
+    - mongodb
+  ports:
+    - "3000:3000"
