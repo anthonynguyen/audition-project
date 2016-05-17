@@ -2,8 +2,12 @@ var assert = require("assert");
 var express = require("express");
 var mongo = require("mongodb");
 var url = require("url");
+var fs = require("fs");
+var morgan = require("morgan");
 
 var app = express();
+var accessLogStream = fs.createWriteStream(__dirname + '/logs/access.log', {flags: 'a'});
+app.use(morgan('combined', {stream: accessLogStream}));
 
 var bodyParser = require("body-parser");
 app.use(bodyParser.json());
